@@ -1,0 +1,54 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet" />
+</head>
+
+<body
+    style="--bg-url: url('{% if exception_occurred %}{% static 'images/Tallulah Falls.gif' %}{% else %}{% static data.bg_image %}{% endif %}'); background-image: var(--bg-url);">
+
+    <div class="container">
+        <h1 class="heading">Weather App</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="city" placeholder="Enter City" required>
+            <button type="submit" class="btn">Search</button>
+        </form>
+
+        <div class="weather">
+            <div class="left">
+                <h2 class="temp">{{ data.temp }}&#176; C</h2>
+                <h2 class="city">{{ data.city }}, {{ data.country }}</h2>
+            </div>
+            <div class="right">
+                <div class="icon">
+                    <p><img src="http://openweathermap.org/img/w/{{ data.icon }}.png" width="120px" alt="weather icon">
+                    </p>
+                </div>
+                <div class="condition">
+                    <p>{{ data.description }}</p>
+                    <p>{{ data.day }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if exception_occurred %}
+    <script>
+        window.onload = function () {
+            alert("City information is not available to Weather API");
+        }
+    </script>
+    {% endif %}
+
+</body>
+
+</html>
