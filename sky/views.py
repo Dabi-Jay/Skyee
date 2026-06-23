@@ -3,14 +3,14 @@ import requests
 import datetime
 
 def home(request):
-    # 1. Default values if it's a GET request or empty search
+    #  Default values 
     city = 'Lagos'
     if request.method == 'POST' and request.POST.get('city'):
         city = request.POST['city'].strip()
 
     WEATHER_API_KEY = "5e9328edab73d3fe4d7e851902746fbf"
 
-    # 2. Fetch Weather Data from OpenWeather
+    #  Fetching Weather Data from OpenWeather
     weather_url = "https://api.openweathermap.org/data/2.5/weather"
     params = {
         'q': city,
@@ -24,16 +24,15 @@ def home(request):
         if response.status_code == 200:
             json_data = response.json()
             
-            # Look up the main weather condition group (e.g., 'Clouds', 'Rain', 'Clear')
+            # Looking up the main weather condition group (e.g Clouds , Rain, Clear)
             weather_main = json_data['weather'][0]['main'].lower()
             
-            # Map the weather condition to your local static images paths
             if 'cloud' in weather_main:
                 bg_image = 'images/clouds.jpg'
             elif 'rain' in weather_main or 'drizzle' in weather_main or 'thunderstorm' in weather_main:
                 bg_image = 'images/rain.jpg'
             else:
-                bg_image = 'images/clear.jpg' # Default background for clear/other skies
+                bg_image = 'images/clear.jpg' 
 
             data = {
                 "city": city.capitalize(),
@@ -42,7 +41,7 @@ def home(request):
                 "description": json_data['weather'][0]['description'].capitalize(),
                 "icon": json_data['weather'][0]['icon'],
                 "day": datetime.date.today().strftime("%A, %B %d"),
-                "bg_image": bg_image  # <-- Added safely inside our data context
+                "bg_image": bg_image  
             }
             exception_occurred = False
         else:
